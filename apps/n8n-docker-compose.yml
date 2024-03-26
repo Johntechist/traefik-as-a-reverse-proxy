@@ -1,1 +1,33 @@
+version: "3"
+services:
+  n8n:
+    image: n8nio/n8n
+    restart: always
+    #ports:
+    #  - "127.0.0.1:5678:5678"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.n8nr-secure.entrypoints=websecure"
+      - "traefik.http.routers.n8n-secure.rule=Host(`n.wotcn.net`)"
+    networks:
+      - proxy
 
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=wotcn
+      - N8N_BASIC_AUTH_PASSWORD=Wv5279V76NPyZwCpxbUht6rM
+      - N8N_HOST=n.wotcn.net
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n.wotcn.net/
+      - GENERIC_TIMEZONE=Europe/Berlin
+    volumes:
+      - ./n8n-date:/home/node/.n8n
+      - /local-files:/files
+#volumes:
+
+networks:
+  proxy:
+    external: true
