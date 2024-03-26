@@ -1,1 +1,43 @@
+version: "3"
 
+services:
+  db:
+    container_name: postgres    
+    image: postgres:15.2
+    restart: always
+    #ports:
+    #  - "5433:5432" # 将 PostgreSQL 端口映射到主机的 5433 端口
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    networks:
+      - proxy    
+  odoo:
+    container_name: odoo17
+    image: odoo:17.0
+    restart: always
+    #ports:
+    #  - "8070:8069"
+    #  - "8071:8071"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.odoo-secure.entrypoints=websecure"
+      - "traefik.http.routers.dooo-secure.rule=Host(`odoo.wotcn.net`)"      
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+        #- odoo17:/usr/lib/python3/dist-packages/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - proxy        
+volumes:
+  odoo-db-data:
+  odoo-web-data:
+          # odoo17:
+networks:
+  proxy:
+    external: true
