@@ -13,6 +13,8 @@ services:
       WORDPRESS_DB_PASSWORD: postgres  # PostgreSQL 密码
     volumes:
       - wordpress_data:/var/www/html  # WordPress 数据持久化
+    networks:
+      - proxy
 
   db:
     image: postgres:latest  # 使用最新版本的 PostgreSQL
@@ -23,8 +25,13 @@ services:
       POSTGRES_PASSWORD: postgres  # PostgreSQL 密码
     volumes:
       - postgres_data:/var/lib/postgresql/data  # PostgreSQL 数据持久化
+    networks:
+      - proxy
 
 volumes:
   wordpress_data:
   postgres_data:
+networks:
+  proxy:
+    external: true
   
