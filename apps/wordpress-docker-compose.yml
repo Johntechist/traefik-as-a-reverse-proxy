@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: postgres  # PostgreSQL 用户名
+      WORDPRESS_DB_PASSWORD: postgres  # PostgreSQL 密码
+    volumes:
+      - wordpress_data:/var/www/html  # WordPress 数据持久化
+
+  db:
+    image: postgres:latest  # 使用最新版本的 PostgreSQL
+    restart: always
+    environment:
+      POSTGRES_DB: wordpress  # PostgreSQL 数据库名
+      POSTGRES_USER: postgres  # PostgreSQL 用户名
+      POSTGRES_PASSWORD: postgres  # PostgreSQL 密码
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # PostgreSQL 数据持久化
+
+volumes:
+  wordpress_data:
+  postgres_data:
+  
