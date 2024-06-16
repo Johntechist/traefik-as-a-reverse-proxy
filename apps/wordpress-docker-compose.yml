@@ -8,7 +8,7 @@ services:
       - "8080:80"
     environment:
       WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_NAME: wordpressdb
       WORDPRESS_DB_USER: postgres  # PostgreSQL 用户名
       WORDPRESS_DB_PASSWORD: postgres  # PostgreSQL 密码
     volumes:
@@ -20,7 +20,7 @@ services:
     image: postgres:latest  # 使用最新版本的 PostgreSQL
     restart: always
     environment:
-      POSTGRES_DB: wordpress  # PostgreSQL 数据库名
+      POSTGRES_DB: wordpressdb  # PostgreSQL 数据库名
       POSTGRES_USER: postgres  # PostgreSQL 用户名
       POSTGRES_PASSWORD: postgres  # PostgreSQL 密码
     volumes:
