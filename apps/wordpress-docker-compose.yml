@@ -1,42 +1,41 @@
 version: '3.8'
-
 services:
   wordpress:
     image: wordpress:latest
-    restart: always
-    ports:
-      - "8080:80"
+    #ports:
+      #- "8000:80"
     environment:
-      WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_NAME: wordpressdb
-      WORDPRESS_DB_USER: postgres  # PostgreSQL 用户名
-      WORDPRESS_DB_PASSWORD: postgres  # PostgreSQL 密码
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: dbuser
+      WORDPRESS_DB_PASSWORD: dbpassword
+      WORDPRESS_DB_NAME: db
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
       - "traefik.http.routers.wordpress-secure.entrypoints=websecure"
-      - "traefik.http.routers.wordpress-secure.rule=Host(`wotcn.net`)" 
+      - "traefik.http.routers.wordpress-secure.rule=Host(`wtactive.com`)"
     volumes:
-      - wordpress_data:/var/www/html  # WordPress 数据持久化
+      - wordpress_data:/var/www/html
+    depends_on:
+      - mariadb
     networks:
       - proxy
 
-  db:
-    image: postgres:latest  # 使用最新版本的 PostgreSQL
-    restart: always
+  mariadb:
+    image: mariadb:latest
     environment:
-      POSTGRES_DB: wordpressdb  # PostgreSQL 数据库名
-      POSTGRES_USER: postgres  # PostgreSQL 用户名
-      POSTGRES_PASSWORD: postgres  # PostgreSQL 密码
+      MYSQL_ROOT_PASSWORD: dbpassword
+      MYSQL_DATABASE: db
+      MYSQL_USER: douser
+      MYSQL_PASSWORD: dbpassword
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # PostgreSQL 数据持久化
+      - db_data:/var/lib/mysql
     networks:
       - proxy
 
 volumes:
   wordpress_data:
-  postgres_data:
+  db_data:
 networks:
   proxy:
     external: true
-  
